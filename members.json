@@ -1,0 +1,32 @@
+[
+  {
+    "name": "VIGNESH",
+    "role": "President",
+    "photo": "images/members/member1.jpg"
+  },
+  {
+    "name": "SHASHANK",
+    "role": "Vice President",
+    "photo": "images/members/member2.jpg"
+  },
+  {
+    "name": "SAMISKHA",
+    "role": "Secretary",
+    "photo": "images/members/member3.jpg"
+  },
+  {
+    "name": "VATSALYA",
+    "role": "Secretary",
+    "photo": "images/members/member4.jpg"
+  },
+  {
+    "name": "INDRA",
+    "role": "Treasurer",
+    "photo": "images/members/member5.jpg"
+  },
+  {
+    "name": "LEESA",
+    "role": "Treasurer",
+    "photo": "images/members/member6.jpg"
+  }
+]

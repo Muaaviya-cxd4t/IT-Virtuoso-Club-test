@@ -1,0 +1,363 @@
+{% extends "base.html" %} {% block title %} ITV | IT Virtuoso Club {% endblock
+%} {% block content %}
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+
+<section class="home-hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-itv-logo">
+        <img
+          src="{{ url_for('static', filename='images/itv_white.png') }}"
+          alt="IT Virtuoso Club"
+        />
+      </div>
+
+      <div class="hero-brandline">
+        <span>IT VIRTUOSO CLUB</span>
+      </div>
+
+      <p class="eyebrow light">
+        DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING
+      </p>
+
+      <h1>
+        We build.<br />
+        <span>We compete.</span><br />
+        We create.
+      </h1>
+
+      <p class="hero-description">
+        A student-led technical club from the Department of Computer Science
+        &amp; Engineering, creating events, competitions and opportunities to
+        build real skills.
+      </p>
+
+      <div class="hero-socials">
+        <a class="button button-light hero-check-events" href="#events">
+          Check Events
+        </a>
+
+        <a
+          class="social-button"
+          href="https://www.instagram.com/it_virtuoso_club?stkn=cW5yanUwYnp6azNw"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="IT Virtuoso Club on Instagram"
+        >
+          ITV Instagram
+        </a>
+
+        <a
+          class="social-button"
+          href="https://www.instagram.com/hackaleague?stkn=MTUyNW00NHFicXU4Mg=="
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Hack A League on Instagram"
+        >
+          HAL Instagram
+        </a>
+      </div>
+    </div>
+
+    <!-- HERO SLIDER -->
+
+    <div class="hero-slider" aria-label="ITV event highlights">
+      <div class="slider-label">ITV / EVENT HIGHLIGHTS</div>
+
+      <div class="slider">
+        {% for i in range(1, 5) %}
+
+        <div class="slide {% if loop.first %}active{% endif %}">
+          <img
+            src="{{ url_for('static', filename='images/slider/slider' ~ i ~ '.jpg') }}"
+            alt="ITV event highlight {{ i }}"
+          />
+        </div>
+
+        {% endfor %}
+
+        <button
+          class="slider-arrow prev"
+          type="button"
+          aria-label="Previous slide"
+        >
+          ‹
+        </button>
+
+        <button class="slider-arrow next" type="button" aria-label="Next slide">
+          ›
+        </button>
+
+        <div class="dots">
+          {% for i in range(4) %}
+
+          <button
+            class="dot {% if loop.first %}active{% endif %}"
+            type="button"
+            data-slide="{{ i }}"
+            aria-label="Slide {{ i + 1 }}"
+          ></button>
+
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     EVENTS
+     ========================================================= -->
+
+<section id="events" class="section events-section">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">01 / EVENTS</p>
+
+      <h2>
+        Upcoming &amp;<br />
+        <span>active.</span>
+      </h2>
+    </div>
+
+    <p>
+      Technical events, competitions and experiences organised by IT Virtuoso
+      Club.
+    </p>
+  </div>
+
+  <div class="event-grid">
+    {% for event in events %}
+
+    <article class="event-card">
+      <div class="event-poster">
+        {% if event.image %}
+
+        <img
+          src="{{ url_for('static', filename=event.image) }}"
+          alt="{{ event.event_name }} poster"
+          loading="lazy"
+        />
+
+        {% else %}
+
+        <div class="poster-placeholder">ITV</div>
+
+        {% endif %}
+      </div>
+
+      <div class="event-body">
+        <div class="event-topline">
+          <span class="status status-{{ event.status }}">
+            {% if event.status == "open" %}
+
+            <i></i>Open {% elif event.status == "closed" %} Closed {% else %}
+            Coming soon {% endif %}
+          </span>
+
+          <span class="event-number"> {{ "%02d" | format(loop.index) }} </span>
+        </div>
+
+        <h3>{{ event.event_name }}</h3>
+
+        <p class="event-description">{{ event.description }}</p>
+
+        <div class="event-meta">
+          <div>
+            <small>TEAM</small>
+
+            <strong> {{ event.min_members }}–{{ event.max_members }} </strong>
+          </div>
+
+          <div>
+            <small>FEE</small>
+
+            <strong>
+              {% if event.original_amount %}
+
+              <s> ₹{{ event.original_amount }} </s>
+
+              {% endif %}
+
+              <em> ₹{{ event.amount_per_team }} </em>
+            </strong>
+          </div>
+        </div>
+
+        {% if event.status == "open" and event.registration_closes %}
+
+        <div
+          class="event-closing countdown"
+          data-countdown="{{ event.registration_closes }}"
+        >
+          Loading…
+        </div>
+
+        {% endif %}
+
+        <!-- =================================================
+             EVENT ACTIONS
+             ================================================= -->
+
+        <div class="event-actions">
+          {% if event.status == "open" %}
+
+          <a
+            class="button primary small"
+            href="{{ url_for('register', event=event.event_name) }}"
+          >
+            Register Now
+          </a>
+
+          {% if event.rulebook_link %}
+
+          <a
+            class="button secondary small"
+            href="{{ event.rulebook_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download Rulebook
+          </a>
+
+          {% endif %} {% elif event.status == "coming_soon" %} {% if
+          event.rulebook_link %}
+
+          <a
+            class="button secondary small"
+            href="{{ event.rulebook_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download Rulebook
+          </a>
+
+          {% else %}
+
+          <button class="button muted small" type="button" disabled>
+            Coming Soon
+          </button>
+
+          {% endif %} {% elif event.status == "closed" %} {% if
+          event.photos_link %}
+
+          <a
+            class="button secondary small"
+            href="{{ event.photos_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Photos
+          </a>
+
+          {% else %}
+
+          <button class="button muted small" type="button" disabled>
+            Registrations Closed
+          </button>
+
+          {% endif %} {% endif %}
+        </div>
+      </div>
+    </article>
+
+    {% endfor %}
+  </div>
+</section>
+
+<!-- =========================================================
+     FACULTY HEADS
+     ========================================================= -->
+
+<section id="faculty" class="section faculty-section">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">02 / FACULTY</p>
+
+      <h2>
+        Faculty<br />
+        <span>Heads.</span>
+      </h2>
+    </div>
+
+    <p>
+      Faculty leadership supporting the IT Virtuoso Club and its technical
+      initiatives.
+    </p>
+  </div>
+
+  <div class="faculty-grid">
+    <article class="faculty-card">
+      <div class="faculty-number">01</div>
+
+      <p>DR RAJKUMAR</p>
+
+      <h3>Faculty Chairman</h3>
+    </article>
+
+    <article class="faculty-card">
+      <div class="faculty-number">02</div>
+
+      <p>DR JYOTHI R</p>
+
+      <h3>Faculty Convener</h3>
+    </article>
+
+    <article class="faculty-card">
+      <div class="faculty-number">03</div>
+
+      <p>DR VEENA PATHENKAR</p>
+
+      <h3>Faculty Co-Convener</h3>
+    </article>
+  </div>
+</section>
+
+<!-- =========================================================
+     OFFICE BEARERS
+     ========================================================= -->
+
+<section id="office-bearers" class="section team-section">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">03 / TEAM</p>
+
+      <h2>
+        Office<br />
+        <span>Bearers.</span>
+      </h2>
+    </div>
+
+    <p>
+      The student team responsible for planning, running and growing IT Virtuoso
+      Club.
+    </p>
+  </div>
+
+  <div class="member-grid">
+    {% for member in members %}
+
+    <article class="member-card">
+      <div class="member-image">
+        <img
+          src="{{ url_for('static', filename=member.photo) }}"
+          alt="{{ member.name }}"
+          loading="lazy"
+        />
+      </div>
+
+      <div class="member-info">
+        <p>{{ member.role }}</p>
+
+        <h3>{{ member.name }}</h3>
+      </div>
+    </article>
+
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

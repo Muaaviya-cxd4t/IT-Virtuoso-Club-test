@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Payment | {{ team.event_name }}{% endblock %}
+{% block content %}
+<section class="payment-page">
+  <div class="payment-container">
+    <a class="back-link" href="{{ url_for('index') }}#events">← Back to events</a>
+
+    <div class="payment-card">
+      <div class="payment-card-top">
+        <span class="payment-step">03 / PAYMENT</span>
+        <span class="secure-pill">● SECURE CHECKOUT</span>
+      </div>
+
+      <div class="payment-icon" aria-hidden="true">₹</div>
+      <p class="eyebrow">FINAL STEP</p>
+      <h1>Complete registration.</h1>
+      <p class="payment-intro">Your team <strong>{{ team.team_name }}</strong> has been created. Complete the payment below to confirm the registration.</p>
+
+      <div class="payment-total">
+        <div>
+          <span>Registration fee</span>
+          <small>{{ team.event_name }}</small>
+        </div>
+        <strong>₹{{ team.amount }}</strong>
+      </div>
+
+      <button id="payButton" class="button primary full" type="button">Pay ₹{{ team.amount }} <span>↗</span></button>
+      <div id="paymentMessage" class="form-error" role="alert" aria-live="polite"></div>
+
+      <div class="payment-note">
+        <span>✓</span>
+        <p>You’ll be redirected through Razorpay’s secure checkout. Your card/UPI details are never stored by this website.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+const teamId = {{ team.id|tojson }};
+const payButton = document.getElementById("payButton");
+const message = document.getElementById("paymentMessage");
+
+payButton.addEventListener("click", async () => {
+    payButton.disabled = true;
+    message.textContent = "Creating secure payment order…";
+    try {
+        const response = await fetch("{{ url_for('create_order') }}", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({team_id: teamId})
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to create payment order.");
+
+        const options = {
+            key: data.key_id,
+            amount: data.amount,
+            currency: data.currency,
+            name: "IT Virtuoso Club",
+            description: {{ team.event_name|tojson }},
+            order_id: data.order_id,
+            handler: async function(payment) {
+                message.textContent = "Verifying payment securely…";
+                try {
+                    const verifyResponse = await fetch("{{ url_for('verify_payment') }}", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({
+                            team_id: teamId,
+                            razorpay_order_id: payment.razorpay_order_id,
+                            razorpay_payment_id: payment.razorpay_payment_id,
+                            razorpay_signature: payment.razorpay_signature
+                        })
+                    });
+                    const result = await verifyResponse.json();
+                    if (!verifyResponse.ok || !result.ok) throw new Error(result.error || "Payment verification failed.");
+                    window.location.href = "{{ url_for('payment_result') }}?team_id=" + encodeURIComponent(teamId) + "&success=1";
+                } catch (error) {
+                    payButton.disabled = false;
+                    message.textContent = error.message || "Payment verification failed.";
+                }
+            },
+            modal: {
+                ondismiss: () => {
+                    payButton.disabled = false;
+                    message.textContent = "Payment window closed. Your registration is still saved.";
+                }
+            },
+            theme: { color: "#101b46" }
+        };
+
+        const checkout = new Razorpay(options);
+        checkout.on("payment.failed", function(response) {
+            payButton.disabled = false;
+            message.textContent = response.error?.description || "Payment failed. Please try again.";
+        });
+        checkout.open();
+    } catch (error) {
+        payButton.disabled = false;
+        message.textContent = error.message || "Unable to start payment.";
+    }
+});
+</script>
+{% endblock %}

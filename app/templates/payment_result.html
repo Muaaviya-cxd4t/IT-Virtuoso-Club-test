@@ -1,0 +1,135 @@
+{% extends "base.html" %} {% block title %} {% if success %} Registration
+Confirmed {% else %} Payment Issue {% endif %} | ITV {% endblock %} {% block
+content %}
+
+<section class="result-page">
+  <div class="result-container">
+    <div
+      class="result-card {% if success %}success{% else %}failure{% endif %}"
+    >
+      <div class="result-mark">{% if success %}✓{% else %}!{% endif %}</div>
+
+      <p class="eyebrow">
+        {% if success %} REGISTRATION CONFIRMED {% else %} PAYMENT ISSUE {%
+        endif %}
+      </p>
+
+      <h1>
+        {% if success %} You're registered. {% else %} Payment could not be
+        confirmed. {% endif %}
+      </h1>
+
+      <p class="result-message">{{ message }}</p>
+
+      {% if success and team %}
+
+      <div class="confirmation-summary">
+        <div class="confirmation-summary-item">
+          <small>EVENT</small>
+          <strong>{{ team.event_name }}</strong>
+        </div>
+
+        <div class="confirmation-summary-item">
+          <small>TEAM</small>
+          <strong>{{ team.team_name }}</strong>
+        </div>
+
+        <div class="confirmation-summary-item">
+          <small>AMOUNT PAID</small>
+          <strong>₹{{ team.amount }}</strong>
+        </div>
+
+        <div class="confirmation-summary-item">
+          <small>STATUS</small>
+          <strong class="paid-status"> PAID ✓ </strong>
+        </div>
+      </div>
+
+      <div class="confirmation-members">
+        <div class="confirmation-section-heading">
+          <p class="eyebrow">TEAM MEMBERS</p>
+        </div>
+
+        <div class="confirmation-table-wrap">
+          <table class="confirmation-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>USN</th>
+                <th>Phone</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for member in members %}
+
+              <tr>
+                <td>{{ loop.index }}</td>
+
+                <td>{{ member.name }}</td>
+
+                <td>{{ member.usn }}</td>
+
+                <td>{{ member.phone }}</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =================================================
+           CONFIRMATION ACTIONS
+           ================================================= -->
+
+      <div class="confirmation-actions">
+        <a
+          class="button primary"
+          href="{{ url_for('confirmation_pdf', team_id=team.id) }}"
+        >
+          Download Confirmation PDF
+          <span>↓</span>
+        </a>
+
+        {% if whatsapp_link %}
+
+        <a
+          class="button whatsapp-button"
+          href="{{ whatsapp_link }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Join WhatsApp Group
+          <span>↗</span>
+        </a>
+
+        {% endif %}
+
+        <a class="button secondary" href="{{ url_for('index') }}#events">
+          Back to Events
+        </a>
+      </div>
+
+      <!-- Automatic PDF download -->
+
+      <iframe
+        class="pdf-download-frame"
+        src="{{ url_for('confirmation_pdf', team_id=team.id) }}"
+        title="Registration confirmation PDF download"
+      ></iframe>
+
+      {% else %}
+
+      <a class="button primary" href="{{ url_for('index') }}#events">
+        Back to Events
+        <span>↗</span>
+      </a>
+
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

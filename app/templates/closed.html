@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ event.event_name }} | ITV{% endblock %}
+{% block content %}
+<section class="result-page">
+    <div class="result-card">
+        <p class="eyebrow">REGISTRATION STATUS</p>
+        <h1>{{ event.event_name }}</h1>
+        <p>Registration is currently unavailable for this event.</p>
+        <a class="button primary" href="{{ url_for('index') }}#events">Back to events</a>
+    </div>
+</section>
+{% endblock %}

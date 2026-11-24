@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101b46" />
+
+    <title>{% block title %}ITV | IT Virtuoso Club{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    {% block head %}{% endblock %}
+  </head>
+
+  <body id="top">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-branding">
+          <a
+            class="gat-brand"
+            href="{{ url_for('index') }}"
+            aria-label="Global Academy of Technology"
+          >
+            <img
+              src="{{ url_for('static', filename='images/gat.png') }}"
+              alt="Global Academy of Technology"
+            />
+          </a>
+
+          <a
+            class="brand"
+            href="{{ url_for('index') }}"
+            aria-label="IT Virtuoso Club home"
+          >
+            <img
+              src="{{ url_for('static', filename='images/itv.png') }}"
+              alt="ITV"
+            />
+          </a>
+        </div>
+
+        <div class="header-department">
+          DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING
+        </div>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="{{ url_for('index') }}">Home</a>
+
+          <a href="{{ url_for('index') }}#events"> Events </a>
+
+          <a href="{{ url_for('index') }}#faculty"> Faculty </a>
+
+          <a href="{{ url_for('index') }}#office-bearers"> Office Bearers </a>
+
+          <a href="{{ url_for('index') }}#contact"> Contact </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer id="contact" class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img
+            src="{{ url_for('static', filename='images/itv_white.png') }}"
+            alt="ITV"
+          />
+
+          <div>
+            <strong>IT VIRTUOSO CLUB</strong>
+
+            <span> Department of Computer Science &amp; Engineering </span>
+
+            <span> Global Academy of Technology </span>
+          </div>
+        </div>
+
+        <div class="footer-contact">
+          <!-- CONTACTS -->
+
+          <div class="footer-contact-block">
+            <small>CONTACTS</small>
+            
+
+            <div class="footer-people">
+              <div class="footer-person">
+                <strong>DR JYOTHI</strong>
+                <span>+91 90000 00001</span>
+              </div>
+
+              <div class="footer-person">
+                <strong>DR VEENA PATHENKAR</strong>
+                <span>+91 90000 00002</span>
+              </div>
+
+              <div class="footer-person">
+                <strong>VIGNESH</strong>
+                <span>+91 90000 00003</span>
+              </div>
+
+              <div class="footer-person">
+                <strong>SHSHANK</strong>
+                <span>+91 90000 00004</span>
+              </div>
+            </div>
+          </div>
+          <div class="footer-people">
+              <div class="footer-person">
+                <strong>Muaaviya (registartion doubts)</strong>
+                <span>+91 8792992006</span>
+              </div>
+
+          <!-- SOCIALS -->
+
+          <div class="footer-contact-block">
+            <small>FOLLOW US</small>
+
+            <div class="footer-socials">
+              <a
+                class="social-button"
+                href="https://www.instagram.com/it_virtuoso_club?stkn=cW5yanUwYnp6azNw"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram · IT Virtuoso Club <span>↗</span>
+              </a>
+
+              <a
+                class="social-button"
+                href="https://www.instagram.com/hackaleague?stkn=MTUyNW00NHFicXU4Mg=="
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram · Hack A League <span>↗</span>
+              </a>
+
+              <a
+                class="social-button"
+                href="https://www.linkedin.com/company/it-virtuoso-club/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn <span>↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span> © 2026 IT Virtuoso Club </span>
+
+        <span> Technology • Innovation • Community </span>
+
+        <a href="#top"> Back to top  </a>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

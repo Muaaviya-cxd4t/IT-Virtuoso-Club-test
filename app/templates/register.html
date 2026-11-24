@@ -1,0 +1,110 @@
+{% extends "base.html" %} {% block title %}Register | {{ event.event_name }}{%
+endblock %} {% block content %}
+<section class="registration-page">
+  <div class="registration-container">
+    <a class="back-link" href="{{ url_for('index') }}#events"
+      >← Back to events</a
+    >
+
+    <div class="registration-header">
+      <div class="registration-title-block">
+        <p class="eyebrow">
+          REGISTRATION / {{ "%02d" | format(event.min_members) }}–{{ "%02d" |
+          format(event.max_members) }} MEMBERS
+        </p>
+        <h1>{{ event.event_name }}</h1>
+        <p>{{ event.description }}</p>
+      </div>
+
+      <div class="registration-summary" aria-label="Registration summary">
+        <div class="summary-stat">
+          <small>TEAM SIZE</small>
+          <strong>{{ event.min_members }}–{{ event.max_members }}</strong>
+        </div>
+        <div class="summary-stat">
+          <small>TEAM FEE</small>
+          <strong>₹{{ event.amount_per_team }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <form
+      id="registrationForm"
+      class="registration-form"
+      method="post"
+      novalidate
+    >
+      <input type="hidden" name="event_name" value="{{ event.event_name }}" />
+      <input type="hidden" name="members_json" id="membersJson" />
+
+      <section class="form-section">
+        <div class="form-section-heading">
+          <span class="section-number">01</span>
+          <div>
+            <p class="section-kicker">START HERE</p>
+            <h2>Team details</h2>
+            <p>Pick a team name. You can add your members right after this.</p>
+          </div>
+        </div>
+
+        <label class="field-label" for="teamName">
+          Team name
+          <input
+            id="teamName"
+            name="team_name"
+            maxlength="100"
+            required
+            autocomplete="organization"
+          />
+          <span class="field-hint"
+            >Keep it clean and memorable. Maximum 100 characters.</span
+          >
+        </label>
+      </section>
+
+      <section class="form-section members-section">
+        <div class="form-section-heading">
+          <span class="section-number">02</span>
+          <div>
+            <p class="section-kicker">YOUR TEAM</p>
+            <h2>Team members</h2>
+            <p>
+              Add between {{ event.min_members }} and {{ event.max_members }}
+              members. Every USN must be unique.
+            </p>
+          </div>
+        </div>
+
+        <div id="memberRows" class="member-rows"></div>
+
+        <button type="button" id="addMember" class="button outline add-member">
+          + Add Member
+        </button>
+      </section>
+
+      <div
+        id="formError"
+        class="form-error"
+        role="alert"
+        aria-live="polite"
+      ></div>
+
+      <div class="registration-submit-row">
+        <div class="fee-summary">
+          <small>TOTAL REGISTRATION FEE</small>
+          <strong>₹{{ event.amount_per_team }}</strong>
+          <span>Secure payment via Razorpay</span>
+        </div>
+        <button class="button primary submit-button" type="submit">
+          Continue to payment <span>↗</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %} {% block scripts %}
+<script>
+  window.EVENT_LIMITS = { min: {{ event.min_members }}, max: {{ event.max_members }} };
+</script>
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+{% endblock %}
